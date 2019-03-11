@@ -1,0 +1,11 @@
+
+/* can add global styles to this file, and also import other style files */
+
+.header{
+    background-color: #b28634;
+    display: block;
+    padding: 3%;
+    color: white;
+    font-size: 40px;
+    font-family: "Comic Sans MS", cursive, sans-serif;
+}

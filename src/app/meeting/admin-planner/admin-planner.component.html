@@ -1,0 +1,212 @@
+
+<div style="margin: 1% 0 0 0"></div>
+<div class="row text-center">
+  <div class="col-md-1"></div>
+  <div class="col-md-3">
+      <button class="btn btn-primary btn-lg" (click)="decrement()" [disabled]="prevBtnDisabled">
+        <<
+      </button>
+  </div>
+  <div class="col-md-4">
+    <h3>{{ viewDate | calendarDate:(view + 'ViewTitle'):'en' }}</h3>
+  </div>
+  <div class="col-md-3">
+      <button class="btn btn-primary btn-lg" (click)="increment()" [disabled]="nextBtnDisabled">
+          >>
+        </button>
+        
+        <button style="margin-left:30%" class="btn btn-outline-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">|||</button>
+        <div class="dropdown-menu">
+          <a class="dropdown-item"
+          mwlCalendarToday
+          [(viewDate)]="viewDate"
+          href="javascript:void(0)">Today</a>
+          <div role="separator" class="dropdown-divider"></div>
+          <a class="dropdown-item" (click)="logout()" href="javascript:void(0)">Logout</a>
+        </div>
+  </div>
+  <div class="col-md-1">
+    
+  </div>
+</div>
+<br>
+
+<div style="margin: 5% 0 5% 0"></div>
+
+
+
+
+
+
+<mwl-calendar-month-view
+  [viewDate]="viewDate"
+  [events]="events"
+  [refresh]="refresh"
+  [activeDayIsOpen]="activeDayIsOpen"
+ (dayClicked)="dayClicked($event.day)"
+ (eventClicked)="handleEvent('Clicked', $event.event)">
+
+</mwl-calendar-month-view>
+
+
+
+<ng-template #modalContent let-close="close">
+  <div class="modal-header">
+    <h5 class="modal-title">{{currentClickedEvent.title}}</h5>
+    <button type="button" class="close" (click)="close()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div style="font-size: 20px;" class="modal-body">
+    <div>
+     <p>Start: {{currentClickedEvent.start|date: 'medium'}}</p> <br>
+     <p>End: {{currentClickedEvent.end|date: 'medium'}}</p><br>
+     <p>Location: {{currentClickedEvent.where}}</p><br>
+     <p>Purpose: {{currentClickedEvent.purpose}}</p><br>
+     <p>Create By: {{currentClickedEvent.createdBy}}</p><br>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-outline-secondary" (click)="close()">OK</button>
+  </div>
+</ng-template>
+
+
+
+
+
+<ng-template #modalContent1 let-close="close">
+
+    <table class="table">
+
+        <thead class="thead-dark">
+            <tr>
+                <th scope="col">Title</th>
+                <th scope="col">Start</th>
+                <th scope="col">End</th>
+                <th scope="col">Where</th>
+                <th scope="col">purpose</th>
+                <th scope="col">Cretaed By</th>
+                <th> </th>
+                <th> </th>
+           </tr>
+        </thead>
+        <tbody>
+            <ng-container *ngFor="let each of seletedDayEvents">
+                <tr scope="row" id="main{{each.id}}">
+                    <td id="title{{each.id}}">{{each.title}}</td>
+                    <td id="start{{each.id}}">{{each.start| date: 'medium'}}</td>
+                    <td id="end{{each.id}}">{{each.end| date: 'medium'}}</td>
+                    <td>{{each.where}}</td>
+                    <td>{{each.purpose}}</td>
+                    <td>{{each.createdBy}}</td>
+                    <td><button id="edit{{each.id}}" (click)="editEvent($event)" href="#">edit</button></td>
+                    <td><button class="btn btn-danger" id="{{each.id}}" (click)="deleteEvent($event)">delete</button></td>
+                  </tr>
+              </ng-container>
+              <button id="addEvent" (click)="addEventz()" class="badge badge-info">(addEvent)</button>                 
+          </tbody>
+      </table>
+
+      
+
+</ng-template>
+  <ng-template #add let-close="close">
+    <div class="modal-content">
+    <div class="modal-header">
+      <div class="modal-title">
+      <h2>Add an Event</h2>
+    </div>
+    </div>
+    <div style="padding: 2%" class="modal-body">
+      <div style="margin:0 10% 0 10%; padding: 2%" class="row">
+          <input type="text" [(ngModel)]="addTitle" class="form-control"  placeholder="Title">
+      </div>
+      <div style="padding:2%" class="row">
+        
+        <div class="col-sm-2"></div>
+        <div class="col-sm-4" style="font-size:20px">
+
+            <label  class="col-form-label">Start</label><br>
+            <input class="form-control" [(ngModel)] = "sd" type="date" min="2018-01-01" max="2018-12-31" dateFormat="Y-m-d">
+            <br><input style="width:50%" class="form-control" [(ngModel)] = "st" type="time">
+
+          </div>
+          <div class="col-sm-4" style="font-size:20px">
+          
+ 
+              <label class="col-form-label">End</label><br>
+              <input class="form-control" [(ngModel)] = "ed" type="date" min="2018-01-01" max="2018-12-31" dateFormat="Y-m-d">
+              <br><input style="width:50%" class="form-control" [(ngModel)] = "et" type="time">
+  
+            </div>
+        <div class="col-sm-2"></div>
+      </div>
+      <div style="text-align: center; padding: 2%; margin:0 15% 0 15%" class="row">
+          <input class="form-control" [(ngModel)]="addWhere" placeholder="where" type="text"/>
+      </div>
+      <div style="text-align: center; padding:2%; margin:0 15% 0 15%" class="row">
+          <input class="form-control" [(ngModel)]="addPurpose" placeholder="purpose" type="text"/> 
+      </div>
+      <div style="text-align:center; margin:0 40% 0 40%" class="row">
+          <button style="text-align: center" class="btn btn-primary btn-lg" (click)="saveEvent()">Save</button>
+      </div>
+
+    </div>
+  </div>
+
+  </ng-template>
+
+
+<!-- edit template -->
+
+
+  
+<ng-template #edit let-close="close">
+  <div class="modal-content">
+  <div class="modal-header">
+    <div class="modal-title">
+    <h2>Edit Event</h2>
+  </div>
+  </div>
+  <div  class="modal-body">
+    <div style="margin:0 10% 0 10%; padding: 2%" class="row">
+      <input type="text" [(ngModel)]="editTitle" class="form-control"  placeholder="Title">
+    </div>
+    <div style="padding:2%" class="row">
+      
+      <div class="col-sm-2"></div>
+ 
+      <div class="col-sm-4" style="font-size:20px">
+          
+          <label  class="col-form-label">Start</label><br>
+          <input class="form-control" [(ngModel)] = "esd" type="date" min="2018-01-01" max="2018-12-31" dateFormat="Y-m-d">
+          <br><input style="width:50%" class="form-control" [(ngModel)] = "est" type="time">
+
+        </div>
+
+      <div class="col-sm-4" style="font-size:20px">
+          
+          <label  class="col-form-label">End</label><br>
+          <input class="form-control" [(ngModel)] = "eed" type="date" min="2018-01-01" max="2018-12-31" dateFormat="Y-m-d">
+          <br><input style="width:50%" class="form-control" [(ngModel)] = "eet" type="time">
+
+        </div>
+      <div class="col-sm-2"></div>
+    </div>
+    <div style="text-align: center; padding: 2%; margin:0 15% 0 15%" class="row">
+        <input class="form-control" [(ngModel)]="editWhere" placeholder="where" type="text"/>
+    </div>
+    <div style="text-align: center; padding:2%; margin:0 15% 0 15%" class="row">
+        <textarea class="form-control" [(ngModel)]="editPurpose" aria-label="With textarea" placeholder="purpose"></textarea>
+    </div>
+    <div style="text-align:center; margin:0 40% 0 40%" class="row">
+        <button style="text-align: center" class="btn btn-primary btn-lg" (click)="saveEditedEvent()">Save</button>
+    </div>
+
+  </div>
+</div>
+
+</ng-template>
+
+

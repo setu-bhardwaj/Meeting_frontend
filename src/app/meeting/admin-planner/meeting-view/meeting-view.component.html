@@ -1,0 +1,35 @@
+<div class="container">
+  <div class="row" *ngIf="currentMeeting">
+    <div class="col-md-12">
+      <h2>{{currentMeeting.title}}</h2>
+
+      <h4>scheduled for {{currentMeeting.userName}} <{{currentMeeting.userEmail}}>
+      </h4>
+      <br>Timings: <br>
+      <p>{{currentMeeting.startAt | date:"medium"}} to {{currentMeeting.endAt | date:"medium"}}</p>
+      <hr>
+      <div [innerHtml]="currentMeeting.description"></div>
+
+
+    </div>
+  </div>
+  <hr>
+  <div class="row" *ngIf="currentMeeting">
+    <div class="col-md-4">
+
+      <a class="btn btn-primary" [routerLink]="['/edit',currentMeeting.eventId]">Edit </a>
+
+    </div>
+    <div class="col-md-4">
+
+      <a class="btn btn-danger" (click)="deleteThisMeeting()">Delete </a>
+
+    </div>
+    <div class="col-md-4">
+
+      <a class="btn btn-warning" (click)="goBackToPreviousPage()">Go Back </a>
+    </div>
+  </div>
+
+  <br><br><br><br><br><br><br>
+</div>

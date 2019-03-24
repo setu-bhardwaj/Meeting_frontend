@@ -9,3 +9,7 @@
     font-size: 40px;
     font-family: "Comic Sans MS", cursive, sans-serif;
 }
+
+.footer{
+    box-shadow: 5px 4px 8px 0 rgb(7, 71, 62);
+}

@@ -12,7 +12,7 @@ import { RouterModule } from '@angular/router';
 import { LoginComponent } from './user/login/login.component';
 import { HomeComponent } from './home/home.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
- 
+
 import { ToastrModule } from 'ngx-toastr';
 import { SignupComponent } from './user/signup/signup.component';
 import { HttpClientModule } from '@angular/common/http';
@@ -22,6 +22,9 @@ import { PasswordResetComponent } from './user/password-reset/password-reset.com
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MeetingService } from './meeting.service';
+
+import { SharedModule } from './shared/shared.module';
+import { AdminPlannerComponent } from './meeting/admin-planner/admin-planner.component';
 
 
 @NgModule({
@@ -36,9 +39,10 @@ import { MeetingService } from './meeting.service';
     FormsModule,
     BrowserModule,
     AppRoutingModule,
-    HttpClientModule, 
+    HttpClientModule,
     UserModule,
     MeetingModule,
+    SharedModule,
     BrowserAnimationsModule, // required animations module
     ToastrModule.forRoot(), // ToastrModule added
     RouterModule.forRoot([
@@ -47,16 +51,17 @@ import { MeetingService } from './meeting.service';
       { path: 'home', component: HomeComponent },
       { path: 'about', component: AboutComponent },
       { path: '', redirectTo: 'home', pathMatch: 'full' },
-      { path: 'reset-password/:token',component:PasswordResetComponent},
+      { path: 'reset-password/:token', component: PasswordResetComponent },
       { path: '*', component: NotFoundComponent },
       { path: '**', component: NotFoundComponent },
-     
-      
+
+
+
 
     ]),
 
   ],
-  providers: [AppService,SocketService,MeetingService],
+  providers: [AppService, SocketService, MeetingService],
   bootstrap: [AppComponent]
 })
-export class AppModule {}
+export class AppModule { }

@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
 import { Cookie } from 'ng2-cookies/ng2-cookies';
 
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, } from '@angular/common/http';
 
 import { HttpErrorResponse, HttpParams } from "@angular/common/http";
 import * as io from 'socket.io-client';
 
-import {Observable, observable} from 'rxjs';
+import { Observable, observable } from 'rxjs';
 
 
 @Injectable({
@@ -16,21 +16,82 @@ export class SocketService {
   public url = "http://localhost:3000/"
   public socket;
 
-  constructor(public http:HttpClient) { 
+  constructor(public http: HttpClient) {
     console.log('in socket service');
     this.socket = io(this.url);
   }//end constructor
 
-  public sendMail = (maildetails) =>{
+
+  //to emit
+  public sendMail = (maildetails) => {
     console.log(maildetails);
-    this.socket.emit('sendMail',maildetails);
+    this.socket.emit('sendMail', maildetails);
   }
 
-  public sendUserId = () =>{
+  public setUser = (authToken) => {
+    this.socket.emit('set-user', authToken);
+  }
 
-    return Observable.create((observer)=>{
 
-      this.socket.on('sendUserId',(data)=>{
+  public notifyUpdates = (data) => {
+    this.socket.emit('notify-updates', data);
+  }
+
+  public exitSocket = () => {
+    this.socket.disconnect();
+  }// end exit socket
+
+  public disconnectedSocket = () => {
+
+    this.socket.emit("disconnect", "");
+
+  }//end disconnectedSocket
+
+
+
+  //to lsiten
+
+  public verifyUser = () => {
+    return Observable.create((observer) => {
+      this.socket.on('verifyUser', (data) => {
+        observer.next(data);
+      });//On method
+    });//end observable
+  }//end verifyUser
+
+  public onlineUserList = () => {
+    return Observable.create((observer) => {
+      this.socket.on('online-user-list', (userList) => {
+        observer.next(userList);
+      });//end On method
+    });//end observable
+
+  }//end onlineUserList
+
+
+  public listenAuthError = () => {
+    return Observable.create((observer) => {
+      this.socket.on('auth-error', (data) => {
+        observer.next(data);
+      }); // end Socket
+    }); // end Observable
+  } // end listenAuthError
+
+
+  public getUpdatesFromAdmin = (userId) => {
+    return Observable.create((observer) => {
+      this.socket.on(userId, (data) => {
+        observer.next(data);
+      }); // end Socket
+    }); // end Observable
+  } // end getUpdatesFromAdmin
+
+
+  public sendUserId = () => {
+
+    return Observable.create((observer) => {
+
+      this.socket.on('sendUserId', (data) => {
         observer.next(data)
       })
 
@@ -38,56 +99,28 @@ export class SocketService {
 
   }//sendUserId
 
-  public check = () =>{
-    return Observable.create((observer) =>{
-      this.socket.on('newEventAdded',(data)=>{
-        observer.next(data);
-      })
+  public disconnect = () => {
+    return Observable.create((observer) => {
+      this.socket.on('disconnect', () => {
+        observer.next();
+      });//end On method
+    });//end observable
 
-    })
-  }//check
-
-  public checkEdit = () =>{
-    return Observable.create((observer) =>{
-      this.socket.on('eventEdited',(data)=>{
-        observer.next(data);
-      })
-
-    })
-  }//checkEdit
-
-  public checkDelete = () =>{
-    return Observable.create((observer) =>{
-      this.socket.on('eventDeleted',(data)=>{
-        observer.next(data);
-      })
-
-    })
-  }//checkDelete
-
-    // events to be emitted
-    public userId = (id)=>{
-      this.socket.emit('userId',id)
-    } 
-  
-    public newEvent = (details) =>{
-      this.socket.emit('newEvent',details)
-    }
-  
-    public eventEdited = (details) =>{
-      this.socket.emit('eventEdited',details)
-    }
-  
-    
-    public eventDeleted = (details) =>{
-      this.socket.emit('eventDeleted',details)
-    }
-  
+  }//end disconnect
 
 
 
 
 
+
+
+
+  //exceptional handler
+  private handleError(err: HttpErrorResponse) {
+    console.log('Handle error http calls');
+    console.log(err.message);
+    return Observable.throw(err.message);
+  }
 
 
 

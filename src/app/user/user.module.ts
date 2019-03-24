@@ -2,8 +2,8 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { LoginComponent } from './login/login.component';
 import { SignupComponent } from './signup/signup.component';
-import{FormsModule} from '@angular/forms';
-import{RouterModule,Routes} from '@angular/router';
+import { FormsModule } from '@angular/forms';
+import { RouterModule, Routes } from '@angular/router';
 import { AdminComponent } from '../meeting/admin/admin.component';
 import { NormalComponent } from '../meeting/normal/normal.component';
 import { ForgetPasswordComponent } from './forget-password/forget-password.component';
@@ -15,11 +15,11 @@ import { PasswordResetComponent } from './password-reset/password-reset.componen
     CommonModule,
     FormsModule,
     RouterModule.forChild([
-       {path:'meeting/admin/:userId',component:AdminComponent},
-       {path:'meeting/:userId',component:NormalComponent},
+      //  {path:'meeting/admin/:userId',component:AdminComponent},
+      //  {path:'meeting/:userId',component:NormalComponent},
 
 
- 
+
 
     ])
   ]

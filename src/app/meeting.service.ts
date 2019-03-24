@@ -18,50 +18,61 @@ export class MeetingService {
     console.log(this.authToken);
   }//end constructor
 
-  public userDetails =  JSON.parse(localStorage.getItem('userInfo'));
+  public userDetails = JSON.parse(localStorage.getItem('userInfo'));
 
 
-      //exceptional handler
-      private handleError(err: HttpErrorResponse) {
-        console.log('Handle error http calls');
-        console.log(err.message);
-        return Observable.throw(err.message);
-      }
+  //exceptional handler
+  private handleError(err: HttpErrorResponse) {
+    console.log('Handle error http calls');
+    console.log(err.message);
+    return Observable.throw(err.message);
+  }
+
+  public getAllEvents = (): any => {
+    let myResponse = this._http.get(this.baseUrl + '/meeting/getEvents/all?authToken=' + this.authToken);
+    console.log(myResponse);
+    return myResponse;
+  } //get getAllEventsofUser
+
+  public getAllEventsofUser = (userId): any => {
+
+    let myResponse = this._http.get(`${this.baseUrl}/meeting/getEvents/user/${userId}?authToken=${this.authToken}`)
+    return myResponse;
+  } //get getAllEventsofUser
 
 
-      public getAllEventsofUser = (userId):any =>{
+  public getEventByUserMail = (currentUserEmail): any => {
+    let myResponse = this._http.get(`${this.baseUrl}/meeting/getEvents/email/${currentUserEmail}?authToken=${this.authToken}`)
+    return myResponse;
+  }//get Single event info
 
-        let myResponse =  this._http.get(`${this.baseUrl}/meeting/getEvents/user/${userId}?authToken=${this.authToken}`)
-      return myResponse;
-       } //get getAllEventsofUser
-
-       public getSingleEvent = (currentEventId) : any => {
-        let myResponse =  this._http.get(`${this.baseUrl}/meeting/getEvents/event/${currentEventId}?authToken=${this.authToken}`)
-      return myResponse;
-       }//get Single event info
-
-     
-      public getEventsOfDay = (details):any =>{
-        let myResponse =  this._http.post(`${this.baseUrl}/meeting/getEvents/date/byDate?authToken=${this.authToken}`,details)
-        return myResponse;
-       
-      } // end of get events of day
+  public getSingleEvent = (currentEventId): any => {
+    let myResponse = this._http.get(`${this.baseUrl}/meeting/getEvents/event/${currentEventId}?authToken=${this.authToken}`)
+    return myResponse;
+  }//get Single event info
 
 
+  public getEventsOfDay = (details): any => {
+    let myResponse = this._http.post(`${this.baseUrl}/meeting/getEvents/date/byDate?authToken=${this.authToken}`, details)
+    return myResponse;
 
-      public addEvent = (details):any =>{
-        let myResponse = this._http.post(`${this.baseUrl}/meeting/addEvent?authToken=${this.authToken}`,details);
-        return myResponse;
-      }//add events
+  } // end of get events of day
 
-      public updateEvent = (currentEventId,details):any =>{
-        let myResponse= this._http.post(`${this.baseUrl}/meeting/editEvent/${currentEventId}?authToken=${this.authToken}`,details);
-        return myResponse;
-      } //updateEvent
 
-      public deleteEvent = (eventId):any =>{
-        let data = {}
-        let myResponse=  this._http.post(`${this.baseUrl}/meeting/deleteEvent/${eventId}?authToken=${this.authToken}`,data);
-        return myResponse;
-      }//deleteEvent
+
+  public addEvent = (details): any => {
+    let myResponse = this._http.post(`${this.baseUrl}/meeting/addEvent?authToken=${this.authToken}`, details);
+    return myResponse;
+  }//add events
+
+  public updateEvent = (currentEventId, details): any => {
+    let myResponse = this._http.put(`${this.baseUrl}/meeting/editEvent/${currentEventId}?authToken=${this.authToken}`, details);
+    return myResponse;
+  } //updateEvent
+
+  public deleteEvent = (eventId): any => {
+    let data = {}
+    let myResponse = this._http.post(`${this.baseUrl}/meeting/deleteEvent/${eventId}?authToken=${this.authToken}`, data);
+    return myResponse;
+  }//deleteEvent
 }//end class

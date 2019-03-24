@@ -8,7 +8,7 @@ import { HttpClient } from '@angular/common/http';
 })
 export class HomeComponent implements OnInit {
 
-  constructor(public _http: HttpClient) { 
+  constructor(public _http: HttpClient) {
     console.log('home costructor  called')
   }
 

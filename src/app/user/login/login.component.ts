@@ -19,8 +19,8 @@ export class LoginComponent implements OnInit {
   public email: any;
   public password: any;
 
- // forgotEmail: forgotPassword;
- forgetEmail: string;
+  // forgotEmail: forgotPassword;
+  forgetEmail: string;
   data: any;
   errorMsg: string;
 
@@ -28,7 +28,7 @@ export class LoginComponent implements OnInit {
     public appService: AppService,
     public router: Router,
     private toastr: ToastrService,
-    public socketService : SocketService
+    public socketService: SocketService
     // vcr: ViewContainerRef,
   ) {
 
@@ -77,14 +77,14 @@ export class LoginComponent implements OnInit {
 
             Cookie.set('receiverName', apiResponse.data.userDetails.firstName + ' ' + apiResponse.data.userDetails.lastName);
             this.appService.setUserInfoInLocalStorage(apiResponse.data.userDetails)
-console.log(apiResponse.data.userDetails.firstName.toLowerCase())
-            if(apiResponse.data.userDetails.firstName.toLowerCase().endsWith('admin')){
-              
-            this.router.navigate([`meeting/admin/${apiResponse.data.userDetails.userId}`]);
-        }
-        else{
-            this.router.navigate([`meeting/${apiResponse.data.userDetails.userId}`]);
-        }
+            console.log(apiResponse.data.userDetails.firstName.toLowerCase())
+            if (apiResponse.data.userDetails.firstName.toLowerCase().endsWith('admin')) {
+
+              this.router.navigate([`meeting/admin/${apiResponse.data.userDetails.userId}`]);
+            }
+            else {
+              this.router.navigate([`meeting/${apiResponse.data.userDetails.userId}`]);
+            }
 
           } else if (apiResponse.status === 400) {
             this.toastr.error('Kindly check credentials');
@@ -107,59 +107,69 @@ console.log(apiResponse.data.userDetails.firstName.toLowerCase())
 
   } // end signinFunction
 
+  public loginUsingKeypress: any = (event: any) => {
+
+    if (event.keyCode === 13) { // 13 is keycode of enter.
+
+      this.signinFunction();
+
+    }
+
+  } // end sendMessageUsingKeypress
+
   forgotpassword() {
     $('#regModal').modal('show');
   }
 
   forgetPass() {
-    if(!this.forgetEmail){
-        this.toastr.warning('Please enter email for recovery')
-      }else{
-   
-        let data = {email :this.forgetEmail };
-     
-    this.appService.findUser(data).subscribe(apiResponse => {
+    if (!this.forgetEmail) {
+      this.toastr.warning('Please enter email for recovery')
+    } else {
+
+      let data = { email: this.forgetEmail };
+
+      this.appService.findUser(data).subscribe(apiResponse => {
         console.log(data)
         console.log(apiResponse);
-      this.data = apiResponse;
-      if (apiResponse.error) {
+        this.data = apiResponse;
+        if (apiResponse.error) {
           //console.log(this.data)
-        this.errorMsg = apiResponse.message;
-        $('#regModal').modal('hide');
-        this.toastr.error('Email is not Registered');
-      } else {
-        let details = {
-            email:this.forgetEmail,
-            PasswordResetToken:generate(),
+          this.errorMsg = apiResponse.message;
+          $('#regModal').modal('hide');
+          this.toastr.error('Email is not Registered');
+        } else {
+          let details = {
+            email: this.forgetEmail,
+            PasswordResetToken: generate(),
             PasswordResetExpiration: new Date(new Date().getTime() + 24 * 60 * 60 * 1000)
           }
-     
-        this.appService.update(details).subscribe((response)=>{
+
+          this.appService.update(details).subscribe((response) => {
             //  console.log(response);
-             if(response.status===200){
+            if (response.status === 200) {
               let mailDetails = {
-                receiver:response.data.email,
-                subject:'Your password reset Link Is Here',
-                html:`<p>Hi ${response.data.firstName},</p>Below is your password reset link.</p><p>http://localhost:4200/reset-password/${details.PasswordResetToken}</p><br><p>Please note that it is valid for a period of 24hrs</p><br><p>Regards:</p><p>Meeting Planner Team</p>`
+                receiver: response.data.email,
+                subject: 'Your password reset Link Is Here',
+                html: `<p>Hi ${response.data.firstName},</p>Below is your password reset link.</p><p>http://localhost:4200/reset-password/${details.PasswordResetToken}</p><br><p>Please note that it is valid for a period of 24hrs</p><br><p>Regards:</p><p>Meeting Planner Team</p>`
               }
               this.socketService.sendMail(mailDetails);
               //  this.router.navigate([`reset-passoword/${details.PasswordResetToken}`])
-                this.toastr.success('Password reset mail sent to you');
-             }else{
-               this.toastr.error('some error occured, please try again')
-             }
-           },
-           ((err)=>{
-             this.toastr.error(err.message)
+              this.toastr.success('Password reset mail sent to you');
+            } else {
+              this.toastr.error('some error occured, please try again')
+            }
+          },
+            ((err) => {
+              this.toastr.error(err.message)
             })
-            )
+          )
 
-
-        $('#regModal').modal('hide');
-        this.toastr.success('Password sent to your email', 'Password Sent');
-      }
-    });
-  }}//forgetPass
+          $('#regModal').modal('hide');
+          this.toastr.success('Password sent to your email', 'Password Sent');
+        }
+      });
+    }
+  }//forgetPass
 
   cancel() {
     $('#regModal').modal('hide');

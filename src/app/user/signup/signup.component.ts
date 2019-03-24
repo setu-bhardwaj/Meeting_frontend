@@ -21,7 +21,7 @@ export class SignupComponent implements OnInit {
   constructor(
 
     public appService: AppService,
-    public socketService : SocketService,
+    public socketService: SocketService,
     public router: Router,
     private toastr: ToastrService,
     vcr: ViewContainerRef) {
@@ -90,11 +90,11 @@ export class SignupComponent implements OnInit {
             this.toastr.success('Signup successful');
 
             let mailDetails = {
-              receiver:apiResponse.data.email,
-              subject:'Welcome to Meeting app',
-              html:`<p>Hi ${apiResponse.data.firstName}, <p>Thank you for joining us, we are happy to have you on board</p><br><p>Regards:</p><p>Meeting app team</p>`
+              receiver: apiResponse.data.email,
+              subject: 'Welcome to Meeting app',
+              html: `<p>Hi ${apiResponse.data.firstName}, <p>Thank you for joining us, we are happy to have you on board</p><br><p>Regards:</p><p>Meeting planner team</p>`
             }
-        
+
             this.socketService.sendMail(mailDetails);
 
             setTimeout(() => {
@@ -121,4 +121,3 @@ export class SignupComponent implements OnInit {
 }
 
 
- 
